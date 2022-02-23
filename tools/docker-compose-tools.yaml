@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  wasm:
+    image: ${PROJECT_NAME}-wasm-rs:${DOCKER_BUILD_TAG_VERSION}
+    build: docker/wasm-rs
+
+  node:
+    image: node:17.5.0
+    command: yarn
