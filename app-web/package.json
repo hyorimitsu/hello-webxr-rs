@@ -1,0 +1,20 @@
+{
+  "name": "hello-webxr-rs",
+  "version": "0.1.0",
+  "description": "WebXR Sample",
+  "scripts": {
+    "build": "webpack",
+    "serve" : "webpack serve --host 0.0.0.0"
+  },
+  "dependencies": {
+    "webxr": "./pkg"
+  },
+  "devDependencies": {
+    "@wasm-tool/wasm-pack-plugin": "^1.6.0",
+    "html-webpack-plugin": "^5.5.0",
+    "text-encoding": "^0.7.0",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4"
+  }
+}
