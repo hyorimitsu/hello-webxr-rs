@@ -1,27 +1,32 @@
-extern crate cfg_if;
-extern crate wasm_bindgen;
+use wasm_bindgen::prelude::*;
+use winit::{
+    event_loop::EventLoop,
+    window::WindowBuilder,
+};
 
 mod utils;
 
-use cfg_if::cfg_if;
-use wasm_bindgen::prelude::*;
+#[wasm_bindgen(start)]
+pub fn run() {
+    utils::set_panic_hook();
 
-cfg_if! {
-    // `wee_alloc` featureが有効になっているとき、
-    // `wee_alloc`をグローバルアロケータとして使います。
-    if #[cfg(feature = "wee_alloc")] {
-        extern crate wee_alloc;
-        #[global_allocator]
-        static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-    }
-}
+    // create window
+    let event_loop = EventLoop::new();
+    let window = WindowBuilder::new()
+        .build(&event_loop)
+        .unwrap();
 
-#[wasm_bindgen]
-extern {
-    fn alert(s: &str);
-}
+    // required to use window.canvas()
+    use winit::platform::web::WindowExtWebSys;
 
-#[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, wasm-game-of-life!");
+    // draw canvas
+    let canvas = window.canvas();
+    web_sys::window()
+        .unwrap()
+        .document()
+        .unwrap()
+        .body()
+        .unwrap()
+        .append_child(&canvas)
+        .unwrap();
 }
