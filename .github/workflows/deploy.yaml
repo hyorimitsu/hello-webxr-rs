@@ -1,0 +1,43 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  SERVICE_ACCOUNT: "gha-oidc@hello-webxr-rs.iam.gserviceaccount.com"
+  WORKLOAD_IDENTITY_NUMBER: "11725892241"
+  WORKLOAD_IDENTITY_POOL_NAME: "gha-oidc-idp"
+  WORKLOAD_IDENTITY_PROVIDER_NAME: "gha-oidc-provider"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - id: auth
+        name: Authenticate to GCP
+        uses: google-github-actions/auth@v0.4.0
+        with:
+          token_format: "access_token"
+          create_credentials_file: true
+          workload_identity_provider: projects/${{ env.WORKLOAD_IDENTITY_NUMBER }}/locations/global/workloadIdentityPools/${{ env.WORKLOAD_IDENTITY_POOL_NAME }}/providers/${{ env.WORKLOAD_IDENTITY_PROVIDER_NAME }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          access_token_lifetime: 1200s # 20min
+
+      - name: Build
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+        working-directory: ./app-web
+
+      - name: Deploy to Firbase Hosting
+        uses: w9jds/firebase-action@bb0dac1000e4ac4d3cf1eddece45c59ceb2d99e2
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ steps.auth.outputs.access_token }}
+          PROJECT_PATH: ./app-web
