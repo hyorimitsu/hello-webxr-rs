@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   SERVICE_ACCOUNT: "gha-oidc@hello-webxr-rs.iam.gserviceaccount.com"
   WORKLOAD_IDENTITY_NUMBER: "11725892241"
