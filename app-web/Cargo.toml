@@ -7,11 +7,30 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-console_error_panic_hook = "0.1.7"
-wasm-bindgen = "0.2.79"
-winit = "0.26.1"
+js-sys = "0.3.58"
+mat4 = "0.2.1"
+wasm-bindgen = { version = "0.2.81", features = ["serde-serialize"] }
+wasm-bindgen-futures = "0.4.31"
 
 [dependencies.web-sys]
-version = "0.3.56"
+version = "0.3.58"
 features = [
+    'console',
+    'Document',
+    'EventTarget',
+    'HtmlCanvasElement',
+    'MouseEvent',
+    'Navigator',
+    'WebGl2RenderingContext',
+    'WebGlBuffer',
+    'WebGlProgram',
+    'WebGlShader',
+    'WebGlUniformLocation',
+    'Window',
+    'XrFrame',
+    'XrRenderStateInit',
+    'XrSession',
+    'XrSessionMode',
+    'XrSystem',
+    'XrWebGlLayer',
 ]
