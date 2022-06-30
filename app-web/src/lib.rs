@@ -1,32 +1,33 @@
-use wasm_bindgen::prelude::*;
-use winit::{
-    event_loop::EventLoop,
-    window::WindowBuilder,
-};
+use js_sys::Promise;
+use wasm_bindgen::{JsValue, prelude::*};
+
+use utils::logs::set_panic_hook;
+use webxr::webxr::WebXR;
 
 mod utils;
+mod webgl;
+mod webxr;
 
-#[wasm_bindgen(start)]
-pub fn run() {
-    utils::set_panic_hook();
+#[wasm_bindgen]
+pub struct App {
+    xr: WebXR,
+}
 
-    // create window
-    let event_loop = EventLoop::new();
-    let window = WindowBuilder::new()
-        .build(&event_loop)
-        .unwrap();
+#[wasm_bindgen]
+impl App {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> App {
+        set_panic_hook();
+        App { xr: WebXR::new() }
+    }
 
-    // required to use window.canvas()
-    use winit::platform::web::WindowExtWebSys;
+    pub fn initialize(&self) -> Promise {
+        log!("initializing...");
+        self.xr.initialize_session()
+    }
 
-    // draw canvas
-    let canvas = window.canvas();
-    web_sys::window()
-        .unwrap()
-        .document()
-        .unwrap()
-        .body()
-        .unwrap()
-        .append_child(&canvas)
-        .unwrap();
+    pub fn run(&self) -> Result<(), JsValue> {
+        log!("running...");
+        self.xr.start()
+    }
 }
