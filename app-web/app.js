@@ -1,3 +1,8 @@
-import * as wasm from "webxr";
+import * as webxr from "webxr";
 
-wasm.run();
+const app = new webxr.App();
+app.initialize()
+    .then(res => {
+        console.log(res);
+        app.run();
+    });
